@@ -12,7 +12,6 @@ router.get('/getCartItems', findToken, async (req, res) => {
         const cartItems = await Cart.find({ user: userId });
         res.status(200).send({ cartItems });
     } catch (error) {
-        console.log(error.message);
         res.status(400).send({ error: "Internal Server Error" })
     }
 });
@@ -27,11 +26,12 @@ router.post('/addNewItem', findToken, [
 
         const error = validationResult(req);
 
-        if (error.isEmpty()) {
+        if (!error.isEmpty()) {
             return res.status(400).send({ error: 'Internal Error Occurred' });
         }
 
         const userId = await req.user;
+        console.log(userId);
 
         const { name, image, price, des } = req.body;
 

@@ -117,20 +117,21 @@ const ContextProvider = (props) => {
         try {
             const response = await fetch("https://orbi-e-commerce-website-backend.onrender.com/cart/addNewItem", {
                 method: "POST",
-                mode: "no-cors",
+                mode: "cors",
                 headers: {
                     "Content-Type": "application/json",
-                    "Auth-Token": token,
+                    "auth-token": token,
                 },
                 body: JSON.stringify({ name: name, image: image, price: Number.parseInt(price), des: des }),
             });
 
             const data = await response.json();
-            console.log(data);
-
+    
             if (data.error) {
                 throw new Error('Internal Cart Adding Error');
             }
+
+            console.log(data);
 
             return data;
 
