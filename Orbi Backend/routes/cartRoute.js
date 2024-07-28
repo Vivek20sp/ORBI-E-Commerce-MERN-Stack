@@ -17,6 +17,7 @@ router.get('/getCartItems', findToken, async (req, res) => {
 });
 
 router.post('/addNewItem', findToken, [
+    body('productId').isEmpty().withMessage('Enter a valid ID'),
     body('name').isLength(2).withMessage('Enter a valid name'),
     body('image').isString().withMessage('Enter a valid image'),
     body('price').isNumeric().withMessage('Enter a valid price'),
@@ -33,11 +34,12 @@ router.post('/addNewItem', findToken, [
 
         const userId = await req.user;
 
-        const { name, image, price, quantity, des } = req.body;
+        const { id, name, image, price, quantity, des } = req.body;
 
         const user = await Cart.findOne({ user: userId });
 
         const item = new Cart({
+            id: id,
             name: name,
             image: image,
             price: price,

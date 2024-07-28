@@ -9,10 +9,10 @@ const ProductInfo = ({ productInfo }) => {
   const token = localStorage.getItem('AuthToken');
   const { addToCarts } = context;
   const handleOnAddCart = (productInfo) => {
-    addToCarts(productInfo.productName, productInfo.img, productInfo.price, productInfo.des, token);
+    addToCarts(productInfo.productName, productInfo.img, productInfo.price,1, productInfo.des, token);
     dispatch(
       addToCart({
-        _id: productInfo._id,
+        _id: productInfo.id,
         name: productInfo.productName,
         quantity: 1,
         image: productInfo.img,

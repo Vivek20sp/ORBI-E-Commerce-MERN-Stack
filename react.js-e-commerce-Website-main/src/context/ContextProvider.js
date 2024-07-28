@@ -25,9 +25,8 @@ const ContextProvider = (props) => {
 
                 if (data.error) {
                     console.log('items fetch error');
-                } else {
-                    setItems(data.items);
                 }
+                setItems(data.items);
             } catch (error) {
                 console.log(error.message);
             } finally {
@@ -68,10 +67,10 @@ const ContextProvider = (props) => {
             itemData();
         }
 
-        if(CartItems.length === 0 && token !== null){
+        if (CartItems.length === 0 && token !== null) {
             getCartItem(token);
         }
-    }, [Items.length, CartItems.length, CartItemLoading, loading]);
+    }, [Items.length, CartItems.length]);
 
     const loginToken = async (name, email, password) => {
         try {
@@ -116,7 +115,7 @@ const ContextProvider = (props) => {
         }
     };
 
-    const addToCarts = async (name, image, price, des, token) => {
+    const addToCarts = async (name, image, price, quantity, des, token) => {
         try {
             const response = await fetch("https://orbi-e-commerce-website-backend.onrender.com/cart/addNewItem", {
                 method: "POST",
@@ -125,11 +124,11 @@ const ContextProvider = (props) => {
                     "Content-Type": "application/json",
                     "auth-token": token,
                 },
-                body: JSON.stringify({ name: name, image: image[0], price: price, des: des }),
+                body: JSON.stringify({ name: name, image: image[0], price: price, quantity: quantity, des: des }),
             });
 
             const data = await response.json();
-            
+
             if (data.error) {
                 throw new Error('Internal Cart Adding Error');
             }
