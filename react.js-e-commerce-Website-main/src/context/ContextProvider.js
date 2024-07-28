@@ -7,6 +7,7 @@ const ContextProvider = (props) => {
     const [loading, setloading] = useState(false);
     const [CartItems, setCartItems] = useState([]);
     const [CartItemLoading, setCartItemLoading] = useState(false);
+    const token = localStorage.getItem('AuthToken');
 
     useEffect(() => {
         const itemData = async () => {
@@ -52,8 +53,6 @@ const ContextProvider = (props) => {
                     throw new Error('Internal Cart Item Error');
                 }
 
-                console.log(data);
-
                 setCartItems(data.cartItems);
 
                 return data;
@@ -68,7 +67,11 @@ const ContextProvider = (props) => {
         if (Items.length === 0) {
             itemData();
         }
-    }, [Items.length, loading]);
+
+        if(CartItems.length === 0 && token !== null){
+            getCartItem(token);
+        }
+    }, [Items.length, CartItems.length, CartItemLoading, loading]);
 
     const loginToken = async (name, email, password) => {
         try {
@@ -113,7 +116,7 @@ const ContextProvider = (props) => {
         }
     };
 
-    const addToCart = async (name, image, price, des, token) => {
+    const addToCarts = async (name, image, price, des, token) => {
         try {
             const response = await fetch("https://orbi-e-commerce-website-backend.onrender.com/cart/addNewItem", {
                 method: "POST",
@@ -122,16 +125,15 @@ const ContextProvider = (props) => {
                     "Content-Type": "application/json",
                     "auth-token": token,
                 },
-                body: JSON.stringify({ name: name, image: image, price: Number.parseInt(price), des: des }),
+                body: JSON.stringify({ name: name, image: image[0], price: price, des: des }),
             });
 
             const data = await response.json();
-    
+            
             if (data.error) {
                 throw new Error('Internal Cart Adding Error');
             }
 
-            console.log(data);
 
             return data;
 
@@ -164,7 +166,7 @@ const ContextProvider = (props) => {
     };
 
     return (
-        <Context.Provider value={{ auth, setauth, loginToken, siginToken, addToCart, CartItems, CartItemLoading, removeItem, Items, loading }}>
+        <Context.Provider value={{ auth, setauth, loginToken, siginToken, addToCarts, CartItems, CartItemLoading, removeItem, Items, loading }}>
             {props.children}
         </Context.Provider>
     );

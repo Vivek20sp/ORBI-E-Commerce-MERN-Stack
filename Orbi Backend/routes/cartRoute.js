@@ -20,6 +20,7 @@ router.post('/addNewItem', findToken, [
     body('name').isLength(2).withMessage('Enter a valid name'),
     body('image').isString().withMessage('Enter a valid image'),
     body('price').isNumeric().withMessage('Enter a valid price'),
+    body('quantity').isNumeric().withMessage('Enter a valid quantity'),
     body('des').isLength(2).withMessage('Enter a valid Description'),
 ], async (req, res) => {
     try {
@@ -31,9 +32,8 @@ router.post('/addNewItem', findToken, [
         }
 
         const userId = await req.user;
-        console.log(userId);
 
-        const { name, image, price, des } = req.body;
+        const { name, image, price, quantity, des } = req.body;
 
         const user = await Cart.findOne({ user: userId });
 
@@ -41,6 +41,7 @@ router.post('/addNewItem', findToken, [
             name: name,
             image: image,
             price: price,
+            quantity: quantity,
             des: des,
             user: userId,
         });

@@ -9,19 +9,21 @@ import ItemCard from "./ItemCard";
 import Context from "../../context/ContextState";
 
 const Cart = () => {
-  const dispatch = useDispatch();
-  const products = useSelector((state) => state.orebiReducer.products);
   const context = useContext(Context);
-  const { getCartItem } = context;
-  const token = localStorage.getItem('AuthToken');
+  const { CartItems, CartItemLoading } = context;
+  const dispatch = useDispatch();
+  const reduxProducts = useSelector((state) => state.orebiReducer.products);
+  const products = CartItems;
   const [totalAmt, setTotalAmt] = useState("");
   const [shippingCharge, setShippingCharge] = useState("");
   useEffect(() => {
     let price = 0;
-    products.map((item) => {
-      price += item.price * item.quantity;
-      return price;
-    });
+    if (CartItems.length !== 0 && CartItemLoading === false) {
+      reduxProducts.map((item) => {
+        price += item.price * item.quantity;
+        return price;
+      });
+    }
     setTotalAmt(price);
   }, [products]);
   useEffect(() => {
@@ -45,11 +47,14 @@ const Cart = () => {
             <h2>Sub Total</h2>
           </div>
           <div className="mt-5">
-            {products.map((item) => (
-              <div key={item._id}>
-                <ItemCard item={item} />
-              </div>
-            ))}
+            {products.map((item) => {
+              console.log(item._id);
+              return (
+                <div key={item._id}>
+                  <ItemCard item={item} />
+                </div>
+              )
+            })}
           </div>
 
           <button

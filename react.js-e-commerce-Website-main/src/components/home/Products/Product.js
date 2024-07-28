@@ -7,13 +7,14 @@ import Image from "../../designLayouts/Image";
 import Badge from "./Badge";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/orebiSlice";
 import Context from "../../../context/ContextState";
 
 const Product = (props) => {
   const dispatch = useDispatch();
   const token = localStorage.getItem('AuthToken');
   const context = useContext(Context);
-  const { addToCart } = context;
+  const { addToCarts } = context;
   const _id = props.productName;
   const idString = (_id) => {
     return String(_id).toLowerCase().split(" ").join("");
@@ -30,8 +31,7 @@ const Product = (props) => {
     });
   };
   const handleAddToCart = async () => {
-    const data = await addToCart(props.productName,props.img,props.price,props.des,token);
-    console.log(data);
+    const data = await addToCarts(props.productName,props.img,props.price,props.des,token);
     dispatch(
       addToCart({
         _id: props._id,
