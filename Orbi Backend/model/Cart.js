@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const CartModel = mongoose.Schema({
     id: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: String,
         require: true,
     },
     name: {

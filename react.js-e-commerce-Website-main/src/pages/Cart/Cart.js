@@ -19,7 +19,7 @@ const Cart = () => {
   useEffect(() => {
     let price = 0;
     if (CartItems.length !== 0 && CartItemLoading === false) {
-      products.map((item) => {
+      reduxProducts.map((item) => {
         console.log(item._id);
         price += item.price * item.quantity;
         return price;
@@ -48,8 +48,8 @@ const Cart = () => {
             <h2>Sub Total</h2>
           </div>
           <div className="mt-5">
-            {reduxProducts.map((item) => {
-              console.log(item);
+            {products.map((item) => {
+              console.log(item.id);
               return (
                 <div key={item._id}>
                   <ItemCard item={item} />
