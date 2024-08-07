@@ -288,6 +288,29 @@ const ContextProvider = (props) => {
         }
     }
 
+    const getOrderId = async (amount) => {
+        try {
+            const response = fetch("https://orbi-e-commerce-website-backend.onrender.com/auth/sigin", {
+                method: "POST",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({amount:amount,currency:'INR'}),
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error('Sigin Error');
+            }
+
+
+        } catch (error) {
+            
+        }
+    }
+
     return (
         <Context.Provider value={{ auth, setauth, loginToken, siginToken, addToCarts, CartItems, CartItemLoading, removeItem, Items, loading, removeAllItemsFromCart, getUserInfo }}>
             {props.children}
