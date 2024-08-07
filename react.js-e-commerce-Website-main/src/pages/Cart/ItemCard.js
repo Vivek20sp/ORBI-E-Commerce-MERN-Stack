@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ImCross } from "react-icons/im";
 import { useDispatch } from "react-redux";
 import {
@@ -6,14 +6,27 @@ import {
   drecreaseQuantity,
   increaseQuantity,
 } from "../../redux/orebiSlice";
+import Context from "../../context/ContextState";
 
 const ItemCard = ({ item }) => {
   const dispatch = useDispatch();
+  const token = localStorage.getItem('AuthToken');
+  const context = useContext(Context);
+  const { removeItem, CartItems } = context;
+  const handleOnRemoveItem = async (item) => {
+    dispatch(deleteItem(item._id));
+    const items = CartItems.filter((product) => product.id === item._id);
+    if (items.length !== 0) {
+      console.log(items[0]._id);
+      removeItem(token, items[0]._id);
+    }
+  }
+
   return (
     <div className="w-full grid grid-cols-5 mb-4 border py-2">
       <div className="flex col-span-5 mdl:col-span-2 items-center gap-4 ml-4">
         <ImCross
-          onClick={() => dispatch(deleteItem(item._id))}
+          onClick={() => handleOnRemoveItem(item)}
           className="text-primeColor hover:text-red-500 duration-300 cursor-pointer"
         />
         <img className="w-32 h-32" src={item.image} alt="productImage" />

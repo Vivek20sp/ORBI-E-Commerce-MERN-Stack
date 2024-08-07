@@ -10,7 +10,7 @@ import Context from "../../../context/ContextState";
 
 const HeaderBottom = () => {
   const context = useContext(Context);
-  const { auth,setauth } = context;
+  const { auth, setauth, CartItems } = context;
   const localAuth = localStorage.getItem('AuthToken');
   const products = useSelector((state) => state.orebiReducer.products);
   const [show, setShow] = useState(false);
@@ -34,7 +34,7 @@ const HeaderBottom = () => {
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
-  
+
   const handleOnLogout = (event) => {
     localStorage.removeItem('AuthToken');
     setauth('');
@@ -46,6 +46,22 @@ const HeaderBottom = () => {
     );
     setFilteredProducts(filtered);
   }, [searchQuery]);
+
+  const [numberOfProducts, setNumberOfProducts] = useState(0);
+
+  useEffect(() => {
+    let count = 0;
+    const hash = {}
+    products.map((item) => {
+      hash[item._id] = item;
+    });
+    CartItems.map((item) => {
+      if (hash[item.id] !== undefined) {
+        count += 1;
+      }
+    })
+    setNumberOfProducts(count);
+  });
 
   return (
     <div className="w-full bg-[#F5F5F3] relative">
@@ -177,7 +193,7 @@ const HeaderBottom = () => {
               <div className="relative">
                 <FaShoppingCart />
                 <span className="absolute font-titleFont top-3 -right-2 text-xs w-4 h-4 flex items-center justify-center rounded-full bg-primeColor text-white">
-                  {products.length > 0 ? products.length : 0}
+                  {numberOfProducts > 0 ? numberOfProducts : 0}
                 </span>
               </div>
             </Link>

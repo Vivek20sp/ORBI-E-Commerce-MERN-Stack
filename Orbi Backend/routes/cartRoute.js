@@ -77,4 +77,20 @@ router.delete('/removeProduct/:id', findToken, async (req, res) => {
     }
 });
 
+router.delete('/removeAllCartItems', findToken, async (req, res) => {
+    try {
+        const userId = await req.user;
+        if(!userId){
+            return res.status(400).send('User Not Present');
+        }
+        const removeItems = await Cart.deleteMany({user:userId});
+        if(!removeItems){
+            return res.status(400).send('No Items Found');
+        }
+        res.status(200).send({removeItems});
+    } catch (error) {
+        
+    }
+})
+
 export default router;

@@ -10,23 +10,36 @@ import Context from "../../context/ContextState";
 
 const Cart = () => {
   const context = useContext(Context);
-  const { CartItems, CartItemLoading } = context;
+  const { CartItems, CartItemLoading, removeAllItemsFromCart } = context;
   const dispatch = useDispatch();
   const reduxProducts = useSelector((state) => state.orebiReducer.products);
   const products = CartItems;
   const [totalAmt, setTotalAmt] = useState("");
   const [shippingCharge, setShippingCharge] = useState("");
+  const usersProduct = [];
+  const token = localStorage.getItem('AuthToken');
+
   useEffect(() => {
     let price = 0;
     if (CartItems.length !== 0 && CartItemLoading === false) {
+      for (let i = 0; i < products.length; i++) {
+        for (let j = 0; j < reduxProducts.length; j++) {
+          if (reduxProducts[j]._id === products[i].id) {
+            usersProduct.push(products[i].id);
+          }
+        }
+      }
       reduxProducts.map((item) => {
-        console.log(item._id);
-        price += item.price * item.quantity;
+        const userItem = usersProduct.filter((id) => item._id === id);
+        if (userItem.length > 0) {
+          price += item.price * item.quantity;
+        }
         return price;
       });
     }
     setTotalAmt(price);
-  }, [products]);
+    // eslint-disable-next-line
+  }, [products, reduxProducts, CartItems]);
   useEffect(() => {
     if (totalAmt <= 200) {
       setShippingCharge(30);
@@ -35,11 +48,19 @@ const Cart = () => {
     } else if (totalAmt > 401) {
       setShippingCharge(20);
     }
-  }, [totalAmt]);
+    // eslint-disable-next-line
+  }, [products, reduxProducts, totalAmt]);
+
+  const handleResetCart = () => {
+    dispatch(resetCart());
+    const data = removeAllItemsFromCart(token);
+    console.log(data);
+  }
+
   return (
     <div className="max-w-container mx-auto px-4">
       <Breadcrumbs title="Cart" />
-      {products.length > 0 ? (
+      {!CartItemLoading && products.length > 0 ? (
         <div className="pb-20">
           <div className="w-full h-20 bg-[#F5F7F7] text-primeColor hidden lgl:grid grid-cols-5 place-content-center px-6 text-lg font-titleFont font-semibold">
             <h2 className="col-span-2">Product</h2>
@@ -48,18 +69,21 @@ const Cart = () => {
             <h2>Sub Total</h2>
           </div>
           <div className="mt-5">
-            {products.map((item) => {
-              console.log(item.id);
-              return (
-                <div key={item._id}>
-                  <ItemCard item={item} />
-                </div>
-              )
+            {products.map((pro) => {
+              return (reduxProducts.map((item) => {
+                if (pro.id === item._id) {
+                  return (
+                    <div key={item._id}>
+                      <ItemCard item={item} />
+                    </div>
+                  )
+                }
+              }))
             })}
           </div>
 
           <button
-            onClick={() => dispatch(resetCart())}
+            onClick={() => handleResetCart()}
             className="py-2 px-10 bg-red-500 text-white font-semibold uppercase mb-4 hover:bg-red-700 duration-300"
           >
             Reset cart
@@ -76,7 +100,6 @@ const Cart = () => {
                 Apply Coupon
               </p>
             </div>
-            <p className="text-lg font-semibold">Update Cart</p>
           </div>
           <div className="max-w-7xl gap-4 flex justify-end mt-4">
             <div className="w-96 flex flex-col gap-4">

@@ -25,7 +25,7 @@ const BestSellers = () => {
           Items.slice(7, 11).map((item) => (
             <div key={item._id} className="px-2">
               <Product
-                _id={item._id}
+                _id={item.id}
                 img={item.image}
                 productName={item.name}
                 price={item.price}

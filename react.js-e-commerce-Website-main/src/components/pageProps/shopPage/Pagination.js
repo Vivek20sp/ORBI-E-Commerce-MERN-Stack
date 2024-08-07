@@ -13,7 +13,7 @@ function ItemsCard({ currentItems }) {
         currentItems.map((item) => (
           <div key={item._id} className="w-full">
             <Product
-              _id={item._id}
+              _id={item.id}
               img={item.image}
               productName={item.name}
               price={item.price}

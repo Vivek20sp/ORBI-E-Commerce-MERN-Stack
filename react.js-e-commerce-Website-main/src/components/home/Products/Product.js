@@ -31,10 +31,10 @@ const Product = (props) => {
     });
   };
   const handleAddToCart = async () => {
-    const data = await addToCarts(props.productName,props.img,props.price,1,props.des,token);
+    const data = await addToCarts(props._id,props.productName,props.img,props.price,1,props.des,token);
     dispatch(
       addToCart({
-        _id: props.id,
+        _id: props._id,
         name: props.productName,
         quantity: 1,
         image: props.img,
