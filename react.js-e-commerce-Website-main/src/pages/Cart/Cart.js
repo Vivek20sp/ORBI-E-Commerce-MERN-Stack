@@ -7,17 +7,20 @@ import { resetCart } from "../../redux/orebiSlice";
 import { emptyCart } from "../../assets/images/index";
 import ItemCard from "./ItemCard";
 import Context from "../../context/ContextState";
+import logo from "../../assets/images/orebiLogo.png";
 
 const Cart = () => {
   const context = useContext(Context);
-  const { CartItems, CartItemLoading, removeAllItemsFromCart } = context;
+  const { CartItems, CartItemLoading, removeAllItemsFromCart, getOrderId } = context;
   const dispatch = useDispatch();
   const reduxProducts = useSelector((state) => state.orebiReducer.products);
   const products = CartItems;
   const [totalAmt, setTotalAmt] = useState("");
   const [shippingCharge, setShippingCharge] = useState("");
+  const [orderID, setorderID] = useState('');
   const usersProduct = [];
   const token = localStorage.getItem('AuthToken');
+  const userInfo = JSON.parse(localStorage.getItem('UserProfile'));
 
   useEffect(() => {
     let price = 0;
@@ -55,6 +58,38 @@ const Cart = () => {
     dispatch(resetCart());
     const data = removeAllItemsFromCart(token);
     console.log(data);
+  }
+
+  const handleOnProceedToPay = () => {
+    const orderId = getOrderId(totalAmt + shippingCharge);
+    console.log(orderId);
+    if (orderId) {
+      setorderID(orderId);
+      const options = {
+        key: process.env.REACT_APP_RAZOR_PAY_API_KEY_ID, // Enter the Key ID generated from the Dashboard
+        amount: totalAmt + shippingCharge, // Amount in currency subunits. Default currency is INR.
+        currency: "INR",
+        name: "OREBI",
+        description: "Test Transaction",
+        image: logo,
+        order_id: orderId.id, // Pass the order ID obtained from the backend
+        redirect: true,
+        callback_url: "http://localhost:3000/paymentSuccessfull",
+        prefill: {
+          name: userInfo.name,
+          email: userInfo.email,
+          contact: userInfo.phone
+        },
+        notes: {
+          address: userInfo.address,
+        },
+        theme: {
+          color: "#3399cc"
+        }
+      };
+      const rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    }
   }
 
   return (
@@ -125,11 +160,9 @@ const Cart = () => {
                 </p>
               </div>
               <div className="flex justify-end">
-                <Link to="/paymentgateway">
-                  <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300">
-                    Proceed to Checkout
-                  </button>
-                </Link>
+                <button className="w-52 h-10 bg-primeColor text-white hover:bg-black duration-300" onClick={handleOnProceedToPay}>
+                  Proceed to Checkout
+                </button>
               </div>
             </div>
           </div>

@@ -106,7 +106,7 @@ const ContextProvider = (props) => {
 
             console.log(userResponseData.user)
 
-            localStorage.setItem('UserProfile',JSON.stringify(userResponseData.user));
+            localStorage.setItem('UserProfile', JSON.stringify(userResponseData.user));
 
             return data;
 
@@ -290,29 +290,30 @@ const ContextProvider = (props) => {
 
     const getOrderId = async (amount) => {
         try {
-            const response = fetch("https://orbi-e-commerce-website-backend.onrender.com/auth/sigin", {
+            const response = await fetch("https://orbi-e-commerce-website-backend.onrender.com/payment/order", {
                 method: "POST",
                 mode: "cors",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({amount:amount,currency:'INR'}),
+                body: JSON.stringify({ amount: amount, currency: 'INR' }),
             });
 
             const data = await response.json();
 
             if (data.error) {
-                throw new Error('Sigin Error');
+                throw new Error('Payment Error');
             }
 
+            return data;
 
         } catch (error) {
-            
+            return error.message;
         }
     }
 
     return (
-        <Context.Provider value={{ auth, setauth, loginToken, siginToken, addToCarts, CartItems, CartItemLoading, removeItem, Items, loading, removeAllItemsFromCart, getUserInfo }}>
+        <Context.Provider value={{ auth, setauth, loginToken, siginToken, addToCarts, CartItems, CartItemLoading, removeItem, Items, loading, removeAllItemsFromCart, getUserInfo, getOrderId }}>
             {props.children}
         </Context.Provider>
     );

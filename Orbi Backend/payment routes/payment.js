@@ -18,7 +18,6 @@ router.post('/order', async (req, res) => {
         const options = {
             amount: req.body.amount,
             currency: req.body.currency,
-            recept: '#invoice',
             payment_capture: 1,
         };
         const order = await razorpay.orders.create(options);
