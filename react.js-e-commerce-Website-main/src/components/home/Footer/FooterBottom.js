@@ -10,9 +10,9 @@ const FooterBottom = () => {
             <AiOutlineCopyright />
           </span>
           Copyright 2023 | Orebi shopping | All Rights Reserved |
-          <a href="https://legacy.reactjs.org/" target="_blank" rel="noreferrer">
+          <a href="https://www.linkedin.com/in/vivek-shankar-phadake-2b6216218/" target="_blank" rel="noreferrer">
             <span className="ml-1 font-medium group-hover:text-primeColor">
-              Powered by Shrikant Kushwah
+              Powered by Vivek Shankar Phadake
             </span>
           </a>
         </p>

@@ -38,7 +38,7 @@ const Footer = () => {
             </p>
             <ul className="flex items-center gap-2">
               <a
-                href="https://www.linkedin.com/in/shrikant-kushwah-5bb1911b2/"
+                href="https://www.linkedin.com/in/vivek-shankar-phadake-2b6216218/"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -48,7 +48,7 @@ const Footer = () => {
               </a>
 
               <a
-                href="https://github.com/shrikant-kushwah"
+                href="https://github.com/Vivek20sp"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -58,7 +58,7 @@ const Footer = () => {
               </a>
 
               <a
-                href="https://twitter.com/kushwa_shrikant"
+                href="/"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -68,7 +68,7 @@ const Footer = () => {
               </a>
 
               <a
-                href="https://youtube.com/@engiladka5200"
+                href="/"
                 target="_blank"
                 rel="noreferrer"
               >

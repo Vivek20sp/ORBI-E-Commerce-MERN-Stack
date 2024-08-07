@@ -89,6 +89,25 @@ const ContextProvider = (props) => {
                 throw new Error('Login Error');
             }
 
+            const userResponse = await fetch("https://orbi-e-commerce-website-backend.onrender.com/auth/getUserInfo", {
+                method: "GET",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Auth-Token": data.jwtToken,
+                },
+            });
+
+            const userResponseData = await userResponse.json();
+
+            if (userResponseData.error) {
+                throw new Error('Internal Cart Adding Error');
+            }
+
+            console.log(userResponseData.user)
+
+            localStorage.setItem('UserProfile',JSON.stringify(userResponseData.user));
+
             return data;
 
         } catch (error) {
@@ -113,12 +132,52 @@ const ContextProvider = (props) => {
                 throw new Error('Sigin Error');
             }
 
+            const userResponse = await fetch("https://orbi-e-commerce-website-backend.onrender.com/auth/getUserInfo", {
+                method: "GET",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Auth-Token": data.jwtToken,
+                },
+            });
+
+            const userResponseData = await userResponse.json();
+
+            if (userResponseData.error) {
+                throw new Error('Internal Cart Adding Error');
+            }
+
+            localStorage.setItem('UserProfile', userResponseData.user);
+
             return data;
 
         } catch (error) {
             return error.message;
         }
     };
+
+    const getUserInfo = async (token) => {
+        try {
+            const response = await fetch("https://orbi-e-commerce-website-backend.onrender.com/auth/getUserInfo", {
+                method: "GET",
+                mode: "cors",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Auth-Token": token,
+                },
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error('Internal Cart Adding Error');
+            }
+
+            return data
+        } catch (error) {
+            return error.message;
+        }
+    }
 
     const addToCarts = async (id, name, image, price, quantity, des, token) => {
         try {
@@ -230,7 +289,7 @@ const ContextProvider = (props) => {
     }
 
     return (
-        <Context.Provider value={{ auth, setauth, loginToken, siginToken, addToCarts, CartItems, CartItemLoading, removeItem, Items, loading, removeAllItemsFromCart }}>
+        <Context.Provider value={{ auth, setauth, loginToken, siginToken, addToCarts, CartItems, CartItemLoading, removeItem, Items, loading, removeAllItemsFromCart, getUserInfo }}>
             {props.children}
         </Context.Provider>
     );

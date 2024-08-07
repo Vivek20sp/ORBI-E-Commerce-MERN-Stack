@@ -49,7 +49,7 @@ const NewArrivals = () => {
     <div className="w-full pb-16">
       <Heading heading="New Arrivals" />
       {loading ? (
-        <div className="flex justify-start items-center gap-4">
+        <div className="flex flex-row justify-start items-center gap-4">
           <Loader width={200} height={200} />
           <Loader width={200} height={200} />
           <Loader width={200} height={200} />
