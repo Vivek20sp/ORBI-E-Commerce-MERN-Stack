@@ -1,12 +1,9 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import Context from "../../context/ContextState";
 
 const Invoice = () => {
-    const context = useContext(Context);
-    const { CartItems, CartItemLoading } = context;
+    const CartItems = JSON.parse(localStorage.getItem('CartItems'));
     const reduxProducts = useSelector((state) => state.orebiReducer.products);
-    const products = CartItems;
     const [totalAmt, setTotalAmt] = useState("");
     const [shippingCharge, setShippingCharge] = useState("");
     const usersProduct = [];
@@ -15,25 +12,13 @@ const Invoice = () => {
 
     useEffect(() => {
         let price = 0;
-        if (CartItems.length !== 0 && CartItemLoading === false) {
-            for (let i = 0; i < products.length; i++) {
-                for (let j = 0; j < reduxProducts.length; j++) {
-                    if (reduxProducts[j]._id === products[i].id) {
-                        usersProduct.push(products[i].id);
-                    }
-                }
-            }
-            reduxProducts.map((item) => {
-                const userItem = usersProduct.filter((id) => item._id === id);
-                if (userItem.length > 0) {
-                    price += item.price * item.quantity;
-                }
-                return price;
-            });
-        }
+        CartItems.map((item) => {
+            price += item.price * item.quantity;
+            return price;
+        });
         setTotalAmt(price);
         // eslint-disable-next-line
-    }, [products, reduxProducts, CartItems]);
+    }, [CartItems]);
     useEffect(() => {
         if (totalAmt <= 200) {
             setShippingCharge(30);
@@ -43,7 +28,7 @@ const Invoice = () => {
             setShippingCharge(20);
         }
         // eslint-disable-next-line
-    }, [products, reduxProducts, totalAmt]);
+    }, [totalAmt]);
 
     return (
         <div>
@@ -76,20 +61,16 @@ const Invoice = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {products.map((pro) => {
-                            return (reduxProducts.map((item) => {
-                                if (item._id === pro.id) {
-                                    return (
-                                        <tr>
-                                            <td class="py-4 text-gray-700">{item.name}</td>
-                                            <td class="py-4 text-gray-700">{item.quantity}</td>
-                                            <td class="py-4 text-gray-700">Rs {item.price}.00</td>
-                                            <td class="py-4 text-gray-700">Rs {item.price }.00</td>
-                                        </tr>
-                                    )
-                                }
-                            }))
-                        })}
+                        {(CartItems.map((item) => {
+                            return (
+                                <tr>
+                                    <td class="py-4 text-gray-700">{item.name}</td>
+                                    <td class="py-4 text-gray-700">{item.quantity}</td>
+                                    <td class="py-4 text-gray-700">Rs {item.price}.00</td>
+                                    <td class="py-4 text-gray-700">Rs {item.price}.00</td>
+                                </tr>
+                            );
+                        }))}
                     </tbody>
                 </table>
                 <div class="flex justify-end mb-8">

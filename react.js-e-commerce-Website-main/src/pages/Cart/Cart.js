@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import Breadcrumbs from "../../components/pageProps/Breadcrumbs";
 import { resetCart } from "../../redux/orebiSlice";
@@ -17,10 +17,11 @@ const Cart = () => {
   const products = CartItems;
   const [totalAmt, setTotalAmt] = useState("");
   const [shippingCharge, setShippingCharge] = useState("");
-  const [orderID, setorderID] = useState('');
+  const [, setorderID] = useState('');
   const usersProduct = [];
   const token = localStorage.getItem('AuthToken');
   const userInfo = JSON.parse(localStorage.getItem('UserProfile'));
+  const navigate = useNavigate();
 
   useEffect(() => {
     let price = 0;
@@ -60,37 +61,49 @@ const Cart = () => {
     console.log(data);
   }
 
-  const handleOnProceedToPay = () => {
-    const orderId = getOrderId(totalAmt + shippingCharge);
-    console.log(orderId);
-    if (orderId) {
-      setorderID(orderId);
-      const options = {
-        key: process.env.REACT_APP_RAZOR_PAY_API_KEY_ID, // Enter the Key ID generated from the Dashboard
-        amount: totalAmt + shippingCharge, // Amount in currency subunits. Default currency is INR.
-        currency: "INR",
-        name: "OREBI",
-        description: "Test Transaction",
-        image: logo,
-        order_id: orderId.id, // Pass the order ID obtained from the backend
-        redirect: true,
-        callback_url: "http://localhost:3000/paymentSuccessfull",
-        prefill: {
-          name: userInfo.name,
-          email: userInfo.email,
-          contact: userInfo.phone
-        },
-        notes: {
-          address: userInfo.address,
-        },
-        theme: {
-          color: "#3399cc"
-        }
-      };
-      const rzp1 = new window.Razorpay(options);
-      rzp1.open();
+  const handleOnProceedToPay = async () => {
+    try {
+      const orderId = await getOrderId(totalAmt + shippingCharge);
+
+      const razorPayApiKey = process.env.REACT_APP_RAZOR_PAY_API_KEY_ID;
+
+      if (!razorPayApiKey) {
+        throw new Error('Razorpay API Key is not defined');
+      }
+
+      if (orderId) {
+        const options = {
+          key: razorPayApiKey,
+          amount: (totalAmt + shippingCharge) * 100,
+          currency: "INR",
+          name: "OREBI",
+          description: "Test Transaction",
+          image: logo,
+          order_id: orderId.id,
+          prefill: {
+            name: userInfo.name,
+            email: userInfo.email,
+            contact: userInfo.phone
+          },
+          notes: {
+            address: userInfo.address,
+          },
+          theme: {
+            color: "#3399cc"
+          },
+          handler: function () {
+            navigate("/paymentSuccessfull");
+            handleResetCart();
+          }
+        };
+        setorderID(orderId);
+        const rzp1 = new window.Razorpay(options);
+        rzp1.open();
+      }
+    } catch (error) {
+      console.error('Error generating order ID:', error);
     }
-  }
+  };
 
   return (
     <div className="max-w-container mx-auto px-4">

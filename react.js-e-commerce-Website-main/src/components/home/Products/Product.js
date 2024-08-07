@@ -31,7 +31,7 @@ const Product = (props) => {
     });
   };
   const handleAddToCart = async () => {
-    const data = await addToCarts(props._id,props.productName,props.img,props.price,1,props.des,token);
+    await addToCarts(props._id,props.productName,props.img,props.price,1,props.des,token);
     dispatch(
       addToCart({
         _id: props._id,

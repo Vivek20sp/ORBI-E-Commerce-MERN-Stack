@@ -9,7 +9,7 @@ const FooterBottom = () => {
           <span className="text-md mr-[1px] mt-[2px] md:mt-0 text-center hidden md:inline-flex">
             <AiOutlineCopyright />
           </span>
-          Copyright 2023 | Orebi shopping | All Rights Reserved |
+          Copyright 2024 | Orebi shopping | All Rights Reserved |
           <a href="https://www.linkedin.com/in/vivek-shankar-phadake-2b6216218/" target="_blank" rel="noreferrer">
             <span className="ml-1 font-medium group-hover:text-primeColor">
               Powered by Vivek Shankar Phadake

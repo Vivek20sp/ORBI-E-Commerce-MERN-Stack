@@ -55,10 +55,17 @@ const ContextProvider = (props) => {
                 });
 
                 const data = await response.json();
+
                 if (data.error) {
                     throw new Error('Internal Cart Item Error');
                 }
+
+                if (data.cartItems.length !== 0) {
+                    localStorage.setItem('CartItems', JSON.stringify(data.cartItems));
+                }
+
                 setCartItems(data.cartItems);
+
             } catch (error) {
                 console.error(error.message);
             } finally {
@@ -104,8 +111,6 @@ const ContextProvider = (props) => {
                 throw new Error('Internal Cart Adding Error');
             }
 
-            console.log(userResponseData.user)
-
             localStorage.setItem('UserProfile', JSON.stringify(userResponseData.user));
 
             return data;
@@ -147,7 +152,7 @@ const ContextProvider = (props) => {
                 throw new Error('Internal Cart Adding Error');
             }
 
-            localStorage.setItem('UserProfile', userResponseData.user);
+            localStorage.setItem('UserProfile', JSON.stringify(userResponseData.user));
 
             return data;
 
@@ -197,7 +202,6 @@ const ContextProvider = (props) => {
                 throw new Error('Internal Cart Adding Error');
             }
 
-            // Fetch updated cart items
             const updatedCartItemsResponse = await fetch("https://orbi-e-commerce-website-backend.onrender.com/cart/getCartItems", {
                 method: "GET",
                 mode: "cors",
@@ -213,6 +217,7 @@ const ContextProvider = (props) => {
                 throw new Error('Error fetching updated cart items');
             }
 
+            localStorage.setItem('CartItems', JSON.stringify(updatedCartItemsData.cartItems));
             setCartItems(updatedCartItemsData.cartItems);
 
             return data;
@@ -255,6 +260,8 @@ const ContextProvider = (props) => {
                 throw new Error('Error fetching updated cart items');
             }
 
+
+            localStorage.setItem('CartItems', JSON.stringify(updatedCartItemsData.cartItems));
             setCartItems(updatedCartItemsData.cartItems);
 
             return data;

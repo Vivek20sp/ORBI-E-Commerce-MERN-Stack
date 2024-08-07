@@ -124,7 +124,7 @@ const Footer = () => {
           <FooterListTitle title="Subscribe to our newsletter." />
           <div className="w-full">
             <p className="text-center mb-4">
-              A at pellentesque et mattis porta enim elementum.
+            Stay ahead of the trends and never miss out—subscribe to the Orbi newsletter for exclusive updates, special offers, and the latest in e-commerce news!
             </p>
             {subscription ? (
               <motion.p

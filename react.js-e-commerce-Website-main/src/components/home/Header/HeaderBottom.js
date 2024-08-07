@@ -45,17 +45,19 @@ const HeaderBottom = () => {
       item.productName.toLowerCase().includes(searchQuery.toLowerCase())
     );
     setFilteredProducts(filtered);
+    // eslint-disable-next-lin
   }, [searchQuery]);
 
   const [numberOfProducts, setNumberOfProducts] = useState(0);
+  const token = localStorage.getItem('AuthToken');
 
   useEffect(() => {
     let count = 0;
     const hash = {}
-    products.map((item) => {
+    products.forEach((item) => {
       hash[item._id] = item;
     });
-    CartItems.map((item) => {
+    CartItems.forEach((item) => {
       if (hash[item.id] !== undefined) {
         count += 1;
       }
@@ -193,7 +195,7 @@ const HeaderBottom = () => {
               <div className="relative">
                 <FaShoppingCart />
                 <span className="absolute font-titleFont top-3 -right-2 text-xs w-4 h-4 flex items-center justify-center rounded-full bg-primeColor text-white">
-                  {numberOfProducts > 0 ? numberOfProducts : 0}
+                  {token && numberOfProducts > 0 ? numberOfProducts : 0}
                 </span>
               </div>
             </Link>
